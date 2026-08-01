@@ -23,16 +23,19 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
         enum: [false, true]
+    },
+    refreshToken: {
+        type: String
     }
 }, {timestamps: true})
 
 userSchema.pre("save", async function() {
-    if (!this.isModified) return
+    if (!this.isModified("password")) return
     this.password = await bcrypt.hash(this.password, 10)
 })
 
 userSchema.methods.isPasswordCorrect = async function(password) {
-    return bcrypt.compare(password, this.password)
+    return await bcrypt.compare(password, this.password)
 }
 
 userSchema.methods.generateAccessToken = function() {

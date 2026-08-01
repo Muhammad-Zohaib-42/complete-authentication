@@ -5,7 +5,7 @@ import cors from "cors"
 const app = express()
 
 app.use(express.json({limit: "15kb"}))
-app.use(cookieParser({limit: "15kb"}))
+app.use(cookieParser())
 app.use(cors({origin: process.env.CORS_ORIGIN, credentials: true}))
 
 function globalErrorHandler(err, req, res, next) {
@@ -20,6 +20,12 @@ function globalErrorHandler(err, req, res, next) {
     })
 }
 
-app.use()
+app.use(globalErrorHandler)
+
+// importing routes
+import authRouter from "./routes/auth.routes.js"
+
+// declaring routes
+app.use("/api/v1/auth", authRouter)
 
 export {app}
